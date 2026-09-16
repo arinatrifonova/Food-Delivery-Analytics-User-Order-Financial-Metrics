@@ -5,13 +5,13 @@ WITH daily_revenue AS (
         date,
         SUM(price) AS revenue
     FROM (SELECT order_id,
-      			     UNNEST(product_ids) AS product_id,
-    		         creation_time::date AS date
+      		     UNNEST(product_ids) AS product_id,
+    		     creation_time::date AS date
           FROM orders) AS t
     LEFT JOIN products USING (product_id)
     WHERE order_id NOT IN (SELECT order_id
-          					       FROM user_actions
-          					       WHERE action = 'cancel_order')
+          				   FROM user_actions
+          				   WHERE action = 'cancel_order')
     GROUP BY date
 )
 
