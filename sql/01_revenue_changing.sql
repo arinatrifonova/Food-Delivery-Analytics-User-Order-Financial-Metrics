@@ -19,5 +19,5 @@ SELECT
     date,
     revenue,
     SUM(revenue) OVER (ORDER BY date) AS total_revenue,
-    ROUND(100 * (revenue - LAG(revenue, 1) OVER (ORDER BY date))::decimal / LAG(revenue, 1) OVER (), 2) AS revenue_change
+    ROUND(100 * (revenue - LAG(revenue, 1) OVER (ORDER BY date))::decimal / LAG(revenue, 1) OVER (ORDER BY date), 2) AS revenue_change
 FROM daily_revenue;
