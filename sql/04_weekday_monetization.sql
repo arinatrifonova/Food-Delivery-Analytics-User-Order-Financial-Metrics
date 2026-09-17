@@ -12,8 +12,8 @@ WITH daily_revenue AS (
     FROM (
         SELECT
             order_id,
-            UNNEST(product_ids) AS product_id,	
-            TO_CHAR(creation_time, 'day') AS weekday	-- Из массива товаров получаем id каждого купленного товара 
+            UNNEST(product_ids) AS product_id,			-- Из массива товаров получаем id каждого купленного товара 
+            TO_CHAR(creation_time, 'day') AS weekday	
         FROM orders
         WHERE 
 			creation_time >= '2022-08-26'
