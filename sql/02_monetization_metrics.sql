@@ -6,8 +6,8 @@
 WITH daily_revenue AS (
     SELECT
         date,
-        SUM(price) AS revenue,
-        COUNT(DISTINCT order_id) AS orders_count
+        SUM(price) AS revenue,						-- Дневная выручка
+        COUNT(DISTINCT order_id) AS orders_count	-- Количество заказов
     FROM (
 		SELECT 
 			order_id,
