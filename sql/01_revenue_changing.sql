@@ -6,7 +6,7 @@
 WITH daily_revenue AS (
     SELECT
         date,					
-        SUM(price) AS revenue	
+        SUM(price) AS revenue						-- Дневная выручка
     FROM (											
 		SELECT 
 			order_id,
