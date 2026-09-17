@@ -16,7 +16,7 @@ WITH daily_revenue AS (
 		FROM orders
 	) AS t
     LEFT JOIN products USING (product_id)			-- Объединяем данные о заказах с таблицей товаров
-    WHERE order_id NOT IN (							      -- Исключаем отмененные заказы из рассчетов
+    WHERE order_id NOT IN (							-- Исключаем отмененные заказы из рассчетов
   		SELECT order_id
   		FROM user_actions
   		WHERE action = 'cancel_order'
@@ -28,23 +28,23 @@ WITH daily_revenue AS (
 daily_users AS (
     SELECT
         time::date AS date,
-        COUNT(DISTINCT user_id) AS count_users,
-        COUNT(DISTINCT user_id) FILTER (
-    			WHERE order_id NOT IN (
-    				SELECT order_id
-    				FROM user_actions
-    				WHERE action = 'cancel_order'
-    			)
-    		) AS paying_users_count
+        COUNT(DISTINCT user_id) AS count_users,		-- Количество всех пользователей
+        COUNT(DISTINCT user_id) FILTER (			-- Количество платящих пользователей
+    		WHERE order_id NOT IN (
+    			SELECT order_id
+    			FROM user_actions
+    			WHERE action = 'cancel_order'
+    		)
+    	) AS paying_users_count
     FROM user_actions
     GROUP BY time::date
 )
 
 SELECT
-    date,											                        -- Конкретный день
-    ROUND(revenue / count_users, 2) AS arpu,			    -- Средняя выручка на 1 пользователя
+    date,											    -- Конкретный день
+    ROUND(revenue / count_users, 2) AS arpu,			-- Средняя выручка на 1 пользователя
     ROUND(revenue / paying_users_count, 2) AS arppu,	-- Средняя выручка на 1 платящего пользователя
-    ROUND(revenue / orders_count, 2) AS aov				    -- Средняя стоимость 1 заказа
+    ROUND(revenue / orders_count, 2) AS aov				-- Средняя стоимость 1 заказа
 FROM daily_revenue
 LEFT JOIN daily_users USING (date)
 ORDER BY date;
