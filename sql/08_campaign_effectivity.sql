@@ -154,7 +154,7 @@ avg_check AS (
     SELECT
         co.ads_campaign,
         ROUND(AVG(user_avg_check), 2) AS avg_check
-    FROM (    -- Подсчитываем средний чек для каждого пользователя                                           
+    FROM (                    -- Подсчитываем средний чек для каждого пользователя                                           
         SELECT
             ads_campaign,                     
             user_id,
