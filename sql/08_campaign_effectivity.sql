@@ -152,21 +152,21 @@ roi AS (
 -- В CTE avg_check рассчитывается средний чек пользователей 
 avg_check AS (
     SELECT
-        co.ads_campaign,
+        ads_campaign,
         ROUND(AVG(user_avg_check), 2) AS avg_check
     FROM (                    -- Подсчитываем средний чек для каждого пользователя                                           
         SELECT
             ads_campaign,                     
-            user_id,
+            co.user_id,
             AVG(order_sum) AS user_avg_check
-        FROM campaign_orders
+        FROM campaign_orders AS co
         LEFT JOIN order_totals USING (order_id)
         INNER JOIN user_actions
-            ON user_actions.user_id = campaign_orders.user_id 
-            AND user_actions.order_id = campaign_orders.order_id
+            ON user_actions.user_id = co.user_id 
+            AND user_actions.order_id = co.order_id
         WHERE user_actions.time::date >= '2022-09-01' 
             AND user_actions.time::date < '2022-09-08'
-        GROUP BY ads_campaign, user_id
+        GROUP BY ads_campaign, co.user_id
     ) AS t
     GROUP BY ads_campaign   -- Группируем значение по каждой кампании
 )
