@@ -36,18 +36,18 @@ WITH daily_revenue AS (
 -- и определяется месяц, к которому относится дата (для соблюдения условий рассчета)
 daily_orders AS (
     SELECT
-        time::date AS date,										-- Дата действия курьера	
-        COUNT(order_id) FILTER (								-- Количество дотсавленных заказов
-			WHERE action = 'deliver_order'
-		) AS orders_count,
+        time::date AS date,															-- Дата действия курьера	
+        COUNT(order_id) FILTER (WHERE action = 'deliver_order') AS orders_count,	-- Количество дотсавленных заказов
+			
+
         CASE
             WHEN time::date >= '2022-08-01' 
-				AND time::date < '2022-09-01' THEN 'август'		-- Месяц доставки
+				AND time::date < '2022-09-01' THEN 'август'							-- Месяц доставки
             WHEN time::date >= '2022-09-01' 
 				AND time::date < '2022-10-01' THEN 'сентябрь'	
         END AS orders_month
     FROM courier_actions
-    WHERE order_id NOT IN (										-- Исключаем отмененные заказы из рассчетов
+    WHERE order_id NOT IN (															-- Исключаем отмененные заказы из рассчетов
         SELECT order_id
         FROM user_actions
         WHERE action = 'cancel_order'
@@ -103,7 +103,7 @@ courier_bonuses  AS (
 -- В CTE taxes рассчитываем сумму НДС по товарам за каждый день
 taxes AS (
     SELECT
-        date,										-- Дата дотсавки заказа											
+        date,																					-- Дата дотсавки заказа											
         SUM(
             CASE
                 WHEN name IN ( 
